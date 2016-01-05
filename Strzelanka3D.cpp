@@ -1,6 +1,6 @@
  #define WIN32_LEAN_AND_MEAN // nie includuje niepotrzebnych libow windowsa
 #include <ws2tcpip.h>
-#include <math.h>
+#include <cmath>
 #include <time.h>
 #include <gl\glaux.h>
 #include "sound.h"
@@ -8,12 +8,12 @@
 
 //bool fullscreen=FALSE;	// pelny ekran?? 
 bool fullscreen=TRUE;
-const int SZER=1280;
-const int WYS=1024;			//rozdzielczosc ekranu
+const int SZER = 1920;
+const int WYS = 1080;			//rozdzielczosc ekranu
 const int maxCzastek=50;
 const int maxStrzalow=50;
 
-#define SERWER "emachines"		//tutaj podac nazwe hosta lub IP serwera
+#define SERWER "kamok"		//tutaj podac nazwe hosta lub IP serwera
 #define PORT "55555"
 bool jestSerwerem;			//aplikacja dziala w trybie serwer czy klient?
 bool przeciwnikTrafiony = FALSE;
@@ -52,7 +52,7 @@ bool zliczFPSy=FALSE;
 GLuint texture[28];					// ile mamy tekstur do wczytania?
 GLuint fonty;						// Base Display List For The Font
 
-static GLuint ROOM;					// Storage For The Room Display List
+//static GLuint ROOM;					// Storage For The Room Display List
 const double piprzez180 = 0.0174532925f;	// obliczone pi/180
 const int maxKomorek = 1000;
 
@@ -1084,8 +1084,8 @@ int renderujScene()
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);	//czyszcznie sceny i bufora glebi
 	glBlendFunc(GL_SRC_ALPHA,GL_ZERO); 
 
-	XP *= 0.8f;				//zmniejszenie aktualnego przyspieszenia gracza do zera
-	ZP *= 0.8f; 
+	XP *= 0.9f;				//zmniejszenie aktualnego przyspieszenia gracza do zera
+	ZP *= 0.9f; 
 	pozX += XP/10;		//do aktualnego przesuniecia sceny dodajemy aktualne przyspieszenie
 	pozZ += ZP/10;
 	xtra = -pozX;		//przesuniecie sceny w keirunku przeciwnym do ruchu gracza (symulacja ruchu)
@@ -1183,13 +1183,12 @@ int renderujScene()
 		fire_zp = -(GLdouble)cos(obrot*piprzez180) / 5;
 
 		// padl strzal ale czy trafil w przeciwnika? porownanie kata strzalu i kata przeciwnika
-		if ( abs( ( (pozX-przecX)/pitagoras((pozX-przecX),(pozZ-przecZ)) )   - sin(obrot*piprzez180) ) < 8 / pitagoras((pozX-przecX),(pozZ-przecZ)))
+		if ( abs(( ( (pozX-przecX)/pitagoras((pozX-przecX),(pozZ-przecZ)) )   - sin(obrot*piprzez180) ) ) < 8 / pitagoras((pozX-przecX),(pozZ-przecZ)))
 		{
 			przeciwnikTrafiony = TRUE;
 			stanModeluPrzec = MODEL_DIE;
 		}
 	}
-
 
 	if (przeciwnikTrafiony)
 	{
@@ -1226,19 +1225,21 @@ int renderujScene()
 		model_gracza->Animate(40, 46, 0.2f);
 		model_broni->Animate(40, 46, 0.2f);
 		break;
+	case MODEL_SHOT:
+		model_gracza->Animate(47, 54, 0.2f);
+		model_broni->Animate(47, 54, 0.2f);
+		break;
 	case MODEL_CROUCH:
 		model_gracza->Animate(136, 154, 0.2f);
 		model_broni->Animate(136, 154, 0.2f);
 		break;
-	case MODEL_SHOT:
-		model_gracza->Animate(47, 54, 0.2f);
-		model_broni->Animate(47, 54,  0.2f);
-		break;
 	case MODEL_DIE:
 		model_gracza->Animate(178, 185, 0.1f);
 		model_broni->Animate(178, 185, 0.1f);
-
+		break;
 	default:
+		model_gracza->Animate(0, 39, 0.2f);
+		model_broni->Animate(0, 39, 0.2f);
 		break;
 	}
 	glPopMatrix();
@@ -1952,9 +1953,6 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			myszY -= (mouse_y-HIWORD(lParam))/czulosc;
 		} 
 
-		if (myszX > 360) myszX = 0;
-		else if (myszX < 0) myszX = 360;
-
 		if (myszY > 85) myszY = 85;
 		else if (myszY < -85) myszY = -85;
 
@@ -2049,11 +2047,11 @@ BOOL CreateGLWindow(char* title, int width, int height, int bits, bool fullscree
 	wc.lpszMenuName		= NULL;									// We Don't Want A Menu
 	wc.lpszClassName	= "OpenGL";								// Set The Class Name
 
-	if (MessageBoxEx(NULL,"Uruchom gre jako:\n\nSerwer = TAK\nKlient = NIE","Pytanie",MB_YESNO|MB_ICONQUESTION,2)==IDYES)
-	{
-		jestSerwerem=TRUE;
-	}
-	else jestSerwerem=FALSE;
+	//if (MessageBoxEx(NULL,"Uruchom gre jako:\n\nSerwer = TAK\nKlient = NIE","Pytanie",MB_YESNO|MB_ICONQUESTION,2)==IDYES)
+	//{
+	//	jestSerwerem=TRUE;
+	//}
+	//else jestSerwerem=FALSE;
 
 
 	ChangeDisplaySettings(NULL,0);								// If So Switch Back To The Desktop
@@ -2090,8 +2088,8 @@ BOOL CreateGLWindow(char* title, int width, int height, int bits, bool fullscree
 
 
 		// Try To Set Selected Mode And Get Results.  NOTE: CDS_FULLSCREEN Gets Rid Of Start Bar.
-		width = 1280;
-		height = 1024;
+		width = 1920;
+		height = 1080;
 		dmScreenSettings.dmPelsWidth	= width;				// Selected Screen Width
 		dmScreenSettings.dmPelsHeight	= height;				// Selected Screen Height
 
@@ -2324,7 +2322,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				if (klawisze['K']) // do gory
 				{
 					pozY++;
-					stanModeluGracz = MODEL_DIE;
+					stanModeluGracz = MODEL_IDLE;
 				}	               
 
 				if (klawisze['-'])

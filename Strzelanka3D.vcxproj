@@ -15,6 +15,7 @@
     <SccLocalPath />
     <ProjectGuid>{05D3E7A7-1475-4EC2-B3B9-36C7FB498757}</ProjectGuid>
     <ProjectName>Strzelanka3D</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -50,6 +51,7 @@
     <OutDir>$(ProjectDir)</OutDir>
     <IntDir>$(ProjectDir)\debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath)\GL;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -65,6 +67,7 @@
       <PrecompiledHeaderOutputFile>.\Release\Strzelanka3D.pch</PrecompiledHeaderOutputFile>
       <ObjectFileName>.\Release\</ObjectFileName>
       <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -97,7 +100,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AssemblerListingLocation>$(ProjectDir)Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\Strzelanka3D.pch</PrecompiledHeaderOutputFile>
